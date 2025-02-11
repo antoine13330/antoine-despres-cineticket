@@ -1,24 +1,42 @@
 'use client'
 import TicketCard from "./ticket-card";
-import { getAllTickets } from "@/lib/db/crud/ticket.crud";
 import { useEffect, useState } from "react";
 import { Ticket } from "@/lib/types/ticket.type";
+import useTicketStore from "@/lib/store/ticket.store";
+import { getAllTicketsFromDB } from "@/lib/db/crud/ticket.crud";
 
 export default function TicketList() {
-    const [tickets, setTickets] = useState<Ticket[]>([]);
-
+    const [loading, setLoading] = useState(true);
+    const { tickets, initTickets } = useTicketStore();
     useEffect(() => {
-        getAllTickets().then(tickets => {
-            setTickets(tickets);
+        getAllTicketsFromDB().then(tickets => {
+            initTickets(tickets);
+            setLoading(false);
         });
     }, []);
 
     return (
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-4 h-full pt-2">
             {
-                tickets.map(ticket => (
-                    <TicketCard key={ticket.id} ticket={ticket} />
+                tickets.map((ticket, _) => (
+                    <TicketCard key={_} ticket={ticket} />
                 ))
+            }
+            {
+                loading && (
+                    <div className="flex justify-center items-center h-full">
+                        <span>Loading...</span>
+                    </div>
+                )
+            }
+            {
+                !loading && tickets.length === 0 && (
+
+                    Array.from({ length: 20 }).map((_, i) => (
+                        <TicketCard key={i} skeleton />
+                    ))
+
+                )
             }
         </div>
     )

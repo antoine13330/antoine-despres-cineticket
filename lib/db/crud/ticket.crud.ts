@@ -1,7 +1,7 @@
 import { Ticket } from "@/lib/types/ticket.type";
 import { db } from "../db";
 
-export async function getAllTickets( ) {
+export async function getAllTicketsFromDB( ) {
     return await db.transaction('r', db.tickets, async () => {
         return db.tickets.toArray();
     });
@@ -9,7 +9,7 @@ export async function getAllTickets( ) {
  }
 
 type GetTicket = string;
-export async function getTicket( id : GetTicket ) {
+export async function getTicketFromDB( id : GetTicket ) {
     return await db.transaction('r', db.tickets, async () => {
         return db.tickets.get(id);
     });
@@ -17,7 +17,7 @@ export async function getTicket( id : GetTicket ) {
 
 
 type DeleteTicket = string;
-export async function deleteTicket( id : DeleteTicket ) {
+export async function deleteTicketFromDB( id : DeleteTicket ) {
     return await db.transaction('rw', db.tickets, async () => {
         return db.tickets.delete(id);
     });
@@ -25,10 +25,11 @@ export async function deleteTicket( id : DeleteTicket ) {
 
 
 type CreateTicket = Omit<Ticket,'id'>;
-export async function createTicket( ticket : CreateTicket ) {
-    return await db.transaction('rw', db.tickets, async () => {
+export async function createTicketFromDB( ticket : CreateTicket ) {
+    const id = await db.transaction('rw', db.tickets, async () => {
         return db.tickets.add(ticket);
     });
+    return await getTicketFromDB(id);
 }
 
 
@@ -37,7 +38,7 @@ type UpdateTicket = {
     expirationDate : string,
     status : string,
 }
-export async function updateTicket( ticket : UpdateTicket ) {
+export async function updateTicketFromDB( ticket : UpdateTicket ) {
     return await db.transaction('rw', db.tickets, async () => {
         return db.tickets.update(ticket.id, ticket);
     });

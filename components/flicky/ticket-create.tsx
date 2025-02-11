@@ -16,7 +16,8 @@ import TakePictureBtn from "../ui/take-picture-btn"
 import { useState } from "react"
 import { Ticket, TicketStatus } from "@/lib/types/ticket.type"
 import { Calendar } from "../ui/calendar"
-import { createTicket } from "@/lib/db/crud/ticket.crud"
+import useTicketStore from "@/lib/store/ticket.store"
+import { createTicketFromDB } from "@/lib/db/crud/ticket.crud"
 
 
 enum TicketCreateStep {
@@ -24,6 +25,7 @@ enum TicketCreateStep {
     INFOS
 }
 export default function TicketCreate() {
+    const { addTicket } = useTicketStore();
     const [imageBase64, setImageBase64] = useState<string | null>(null);
     const [step, setStep] = useState<TicketCreateStep>(TicketCreateStep.IMAGE);
     const [expirationDate, setExpirationDate] = useState<Date>(new Date());
@@ -43,9 +45,10 @@ export default function TicketCreate() {
             expirationDate: expirationDate.toISOString(),
             status: TicketStatus.VALID
         }
-        createTicket(ticket).then(() => {
+        createTicketFromDB(ticket).then((ticket) => {
             setStep(TicketCreateStep.IMAGE);
             setImageBase64(null);
+            addTicket(ticket);
         });
         setDialogOpen(false);
     }
@@ -123,7 +126,7 @@ export default function TicketCreate() {
 
     return (<Drawer open={dialogOpen} onOpenChange={setDialogOpen}>
         <DrawerTrigger asChild>
-            <Button variant="outline">
+            <Button >
                 <TicketPlus className="mr-2" />
                 Add a ticket
             </Button>
