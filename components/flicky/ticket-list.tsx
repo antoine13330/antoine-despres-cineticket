@@ -1,4 +1,4 @@
-import { db } from "@/lib/db/db";
+'use client'
 import TicketCard from "./ticket-card";
 import { getAllTickets } from "@/lib/db/crud/ticket.crud";
 import { useEffect, useState } from "react";

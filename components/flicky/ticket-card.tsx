@@ -36,10 +36,11 @@ export default function TicketCard({
             <CardHeader>
                 <div className="flex justify-between">
                     <div className="flex gap-2">
-                        <Badge color={ticketStatusInfos.color}>
+                        <Badge color={ticketStatusInfos.color} className="rounded-full overflow-hidden aspect-square h-8 p-2">
                             {ticketStatusInfos.icon}
                         </Badge>
                     </div>
+                    <img src={ticket.base64Image} className="object-cover w-8 h-8" />
                     <Button variant="destructive">Delete</Button>
 
                 </div>

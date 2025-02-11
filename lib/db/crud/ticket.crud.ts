@@ -1,26 +1,35 @@
 import { Ticket } from "@/lib/types/ticket.type";
 import { db } from "../db";
 
-export const getAllTickets = db.transaction('r', db.ticket, function* () {
-    return yield db.ticket.toArray();
-});
+export async function getAllTickets( ) {
+    return await db.transaction('r', db.tickets, async () => {
+        return db.tickets.toArray();
+    });
 
+ }
 
 type GetTicket = string;
-export const getTicket = db.transaction('r', db.ticket, function* (id : GetTicket) {
-    return yield db.ticket.get(id);
-});
+export async function getTicket( id : GetTicket ) {
+    return await db.transaction('r', db.tickets, async () => {
+        return db.tickets.get(id);
+    });
+}
 
 
 type DeleteTicket = string;
-export const deleteTicket = db.transaction('rw', db.ticket, function* (id: DeleteTicket) {
-    return yield db.ticket.delete(id);
-});
+export async function deleteTicket( id : DeleteTicket ) {
+    return await db.transaction('rw', db.tickets, async () => {
+        return db.tickets.delete(id);
+    });
+}
+
 
 type CreateTicket = Omit<Ticket,'id'>;
-export const createTicket = db.transaction('rw', db.ticket, function* (ticket: CreateTicket) {
-    return yield db.ticket.add(ticket);
-});
+export async function createTicket( ticket : CreateTicket ) {
+    return await db.transaction('rw', db.tickets, async () => {
+        return db.tickets.add(ticket);
+    });
+}
 
 
 type UpdateTicket = {
@@ -28,8 +37,8 @@ type UpdateTicket = {
     expirationDate : string,
     status : string,
 }
-export const updateTicket = db.transaction('rw', db.ticket, function* (ticket: UpdateTicket) {
-    return yield db.ticket.update(ticket.id, ticket);
-})
-
-
+export async function updateTicket( ticket : UpdateTicket ) {
+    return await db.transaction('rw', db.tickets, async () => {
+        return db.tickets.update(ticket.id, ticket);
+    });
+}
