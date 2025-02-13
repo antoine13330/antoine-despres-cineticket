@@ -32,6 +32,7 @@ export default function TicketCard({
     const { updateTicket, removeTicket } = useTicketStore()
     const ticketStatusInfos = useMemo<TicketStatusInfos>(() => {
         const iconSize = 24;
+        if ( !ticket ) return { color: 'bg-gray-400', icon: <FileQuestion size={iconSize} /> }
         switch (ticket.status) {
             case TicketStatus.CONSUMED:
                 return { color: 'bg-red-500', icon: <XIcon size={iconSize} /> }
@@ -42,7 +43,7 @@ export default function TicketCard({
             default:
                 return { color: 'bg-gray-400', icon: <FileQuestion size={iconSize} /> }
         }
-    }, [ticket.status])
+    }, [ticket?.status])
 
     const getAdditionalText = () => {
         if ( ticket.status === TicketStatus.CONSUMED ) {
