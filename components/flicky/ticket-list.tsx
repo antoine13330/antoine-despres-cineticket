@@ -11,6 +11,9 @@ export default function TicketList() {
         getAllTicketsFromDB().then(tickets => {
             initTickets(tickets);
             setLoading(false);
+        }).catch(err => {
+            console.error(err);
+            setLoading(false);
         });
     }, [initTickets]);
 
@@ -23,17 +26,17 @@ export default function TicketList() {
             }
             {
                 loading && (
-                    <div className="flex justify-center items-center h-full">
-                        <span>Loading...</span>
-                    </div>
+                    Array.from({ length: 20 }).map((_, i) => (
+                        <TicketCard key={i} skeleton />
+                    ))
                 )
             }
             {
                 !loading && tickets.length === 0 && (
 
-                    Array.from({ length: 20 }).map((_, i) => (
-                        <TicketCard key={i} skeleton />
-                    ))
+                    <div className="flex flex-col items-center justify-center h-full">
+                        <p className="text-lg font-semibold text-neutral-400 dark:text-neutral-500">No tickets yet</p>
+                    </div>
 
                 )
             }
