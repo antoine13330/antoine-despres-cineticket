@@ -10,15 +10,15 @@ import {
     DrawerTrigger,
 } from "@/components/ui/drawer"
 import { Button } from "../ui/button"
-import { Camera, RefreshCcwDot, TicketPlus } from "lucide-react"
+import { RefreshCcwDot, TicketPlus } from "lucide-react"
 import { FileUpload } from "../ui/file-upload"
 import TakePictureBtn from "../ui/take-picture-btn"
 import { useState } from "react"
-import { Ticket, TicketStatus } from "@/lib/types/ticket.type"
+import { TicketStatus } from "@/lib/types/ticket.type"
 import { Calendar } from "../ui/calendar"
 import useTicketStore from "@/lib/store/ticket.store"
 import { createTicketFromDB } from "@/lib/db/crud/ticket.crud"
-
+import Image from "next/image"
 
 enum TicketCreateStep {
     IMAGE,
@@ -73,7 +73,7 @@ export default function TicketCreate() {
                             {
                                 imageBase64 && (
                                     <>
-                                        <img src={imageBase64} alt="ticket" className="w-full rounded-lg" />
+                                        <Image src={imageBase64} alt="ticket" className="w-full rounded-lg" width={200} height={200} />
                                         <Button variant="outline" className="w-full mt-2" onClick={onChangePicture}>
                                             <RefreshCcwDot className="mr-2" />
                                             Change picture

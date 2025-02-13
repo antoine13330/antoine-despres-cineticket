@@ -25,7 +25,7 @@ const sortTickets = (tickets: Ticket[]): Ticket[] => {
 
 const useTicketStore = create(
     persist<State & Actions>(
-        (set, get) => ({
+        (set) => ({
             tickets: [],
             initTickets: (tickets) => set({ tickets: sortTickets(tickets) }),
             bulkAddTickets: (tickets) => set((state) => ({ tickets: sortTickets([...state.tickets, ...tickets]) })),

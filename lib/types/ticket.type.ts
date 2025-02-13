@@ -4,7 +4,7 @@ export enum TicketStatus {
     VALID = 'valid'
 }
 export type Ticket = {
-    id : string,
+    id : number,
     expirationDate : string,
     status : TicketStatus,
     base64Image : string,    

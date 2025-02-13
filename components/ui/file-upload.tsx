@@ -26,13 +26,13 @@ export const FileUpload = ({
 
   const handleFileChange = async (newFiles: File[]) => {
     setFiles((prevFiles) => [...prevFiles, ...newFiles]);
-    onChange && onChange(newFiles);
+    onChange(newFiles)
 
     // Conversion en base64
     const base64Promises = newFiles.map((file) => fileToBase64(file));
     const base64Files = await Promise.all(base64Promises);
-
-    onUpload && onUpload(base64Files[0]);
+    
+    onUpload(base64Files[0]);
   };
 
   const handleClick = () => {

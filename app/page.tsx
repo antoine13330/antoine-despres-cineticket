@@ -2,7 +2,6 @@ import TicketCreate from "@/components/flicky/ticket-create";
 import TicketList from "@/components/flicky/ticket-list";
 import { Separator } from "@/components/ui/separator";
 import { Film } from "lucide-react";
-import Image from "next/image";
 
 export default function Home() {
   return (

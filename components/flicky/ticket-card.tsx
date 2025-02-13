@@ -1,17 +1,15 @@
 'use client'
 import { Ticket, TicketStatus } from "@/lib/types/ticket.type"
-import { Card, CardHeader } from "../ui/card"
+import { Card } from "../ui/card"
 import { Button } from "../ui/button"
 import { Badge } from "../ui/badge"
-import { useMemo } from "react"
+import { JSX, useMemo } from "react"
 import { CheckIcon, ClockIcon, EllipsisVertical, FileQuestion, XIcon } from "lucide-react"
 import useTicketStore from "@/lib/store/ticket.store"
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { cn } from "@/lib/utils"
@@ -25,7 +23,7 @@ type Props = {
 }
 type TicketStatusInfos = {
     color: string;
-    icon: any
+    icon: JSX.Element;
 }
 export default function TicketCard({
     ticket,
