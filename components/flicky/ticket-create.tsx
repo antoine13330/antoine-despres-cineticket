@@ -19,6 +19,7 @@ import { Calendar } from "../ui/calendar"
 import useTicketStore from "@/lib/store/ticket.store"
 import { createTicketFromDB } from "@/lib/db/crud/ticket.crud"
 import Image from "next/image"
+import moment from "moment"
 
 enum TicketCreateStep {
     IMAGE,
@@ -28,7 +29,7 @@ export default function TicketCreate() {
     const { addTicket } = useTicketStore();
     const [imageBase64, setImageBase64] = useState<string | null>(null);
     const [step, setStep] = useState<TicketCreateStep>(TicketCreateStep.IMAGE);
-    const [expirationDate, setExpirationDate] = useState<Date>(new Date());
+    const [expirationDate, setExpirationDate] = useState<Date>(moment().add(1, 'week').toDate());
     const [dialogOpen, setDialogOpen] = useState(false);
     const onUpload = (base64Image: string) => {
         setImageBase64(base64Image);
