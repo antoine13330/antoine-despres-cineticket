@@ -26,7 +26,7 @@ export default function TicketList() {
             }
             {
                 loading && (
-                    Array.from({ length: 20 }).map((_, i) => (
+                    Array.from({ length: 5 }).map((_, i) => (
                         <TicketCard key={i} skeleton />
                     ))
                 )
