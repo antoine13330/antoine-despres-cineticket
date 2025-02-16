@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import moment from 'moment'
-import { Ticket } from '../types/ticket.type'
+import { Ticket, TicketStatus } from '../types/ticket.type'
 
 type State = {
     tickets: Ticket[]
@@ -17,30 +17,39 @@ type Actions = {
 }
 
 // Fonction pour trier les tickets
-const sortTickets = (tickets: Ticket[]): Ticket[] => {
-    return tickets
+const sortAndUpdateTickets = (tickets: Ticket[]): Ticket[] => {
+    const sorted =  tickets
         .filter(ticket => moment(ticket.expirationDate).isValid()) 
         .sort((a, b) => moment(a.expirationDate).diff(moment(b.expirationDate)))
+
+        const updatedStatus = sorted.map(ticket => {
+            if (moment(ticket.expirationDate).isBefore(moment()) && ticket.status !== TicketStatus.EXPIRED) {
+                return { ...ticket, status: TicketStatus.EXPIRED }
+            }
+            return ticket
+        }
+    )
+    return updatedStatus
 }
 
 const useTicketStore = create(
     persist<State & Actions>(
         (set) => ({
             tickets: [],
-            initTickets: (tickets) => set({ tickets: sortTickets(tickets) }),
-            bulkAddTickets: (tickets) => set((state) => ({ tickets: sortTickets([...state.tickets, ...tickets]) })),
-            addTicket: (ticket) => set((state) => ({ tickets: sortTickets([...state.tickets, ticket]) })),
+            initTickets: (tickets) => set({ tickets: sortAndUpdateTickets(tickets) }),
+            bulkAddTickets: (tickets) => set((state) => ({ tickets: sortAndUpdateTickets([...state.tickets, ...tickets]) })),
+            addTicket: (ticket) => set((state) => ({ tickets: sortAndUpdateTickets([...state.tickets, ticket]) })),
             updateTicket: (ticket) => set((state) => ({
-                tickets: sortTickets(state.tickets.map(t => t.id === ticket.id ? ticket : t))
+                tickets: sortAndUpdateTickets(state.tickets.map(t => t.id === ticket.id ? ticket : t))
             })),
             removeTicket: (ticket) => set((state) => ({
-                tickets: sortTickets(state.tickets.filter(t => t.id !== ticket.id))
+                tickets: sortAndUpdateTickets(state.tickets.filter(t => t.id !== ticket.id))
             })),
             bulkRemoveTickets: (tickets) => set((state) => ({
-                tickets: sortTickets(state.tickets.filter(t => !tickets.some(removed => removed.id === t.id)))
+                tickets: sortAndUpdateTickets(state.tickets.filter(t => !tickets.some(removed => removed.id === t.id)))
             })),
             bulkUpdateTickets: (tickets) => set((state) => ({
-                tickets: sortTickets(state.tickets.map(t => {
+                tickets: sortAndUpdateTickets(state.tickets.map(t => {
                     const updatedTicket = tickets.find(updatedTicket => updatedTicket.id === t.id)
                     return updatedTicket ? updatedTicket : t
                 }))
