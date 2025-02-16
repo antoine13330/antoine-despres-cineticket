@@ -3,7 +3,7 @@ import { Ticket, TicketStatus } from "@/lib/types/ticket.type"
 import { Card } from "../ui/card"
 import { Button } from "../ui/button"
 import { Badge } from "../ui/badge"
-import { JSX, useMemo } from "react"
+import { JSX, useEffect, useMemo } from "react"
 import { CheckIcon, ClockIcon, EllipsisVertical, FileQuestion, XIcon } from "lucide-react"
 import useTicketStore from "@/lib/store/ticket.store"
 import {
@@ -29,10 +29,11 @@ export default function TicketCard({
     ticket,
     skeleton
 }: Props) {
+
     const { updateTicket, removeTicket } = useTicketStore()
     const ticketStatusInfos = useMemo<TicketStatusInfos>(() => {
         const iconSize = 24;
-        if ( !ticket ) return { color: 'bg-gray-400', icon: <FileQuestion size={iconSize} /> }
+        if (!ticket) return { color: 'bg-gray-400', icon: <FileQuestion size={iconSize} /> }
         switch (ticket.status) {
             case TicketStatus.CONSUMED:
                 return { color: 'bg-red-500', icon: <XIcon size={iconSize} /> }
@@ -44,17 +45,6 @@ export default function TicketCard({
                 return { color: 'bg-gray-400', icon: <FileQuestion size={iconSize} /> }
         }
     }, [ticket?.status])
-
-    const getAdditionalText = () => {
-        if ( ticket.status === TicketStatus.CONSUMED ) {
-            return 'Consumed';
-        }
-        if (moment(ticket.expirationDate).isBefore(moment())) {
-            if (ticket.status !== TicketStatus.EXPIRED) updateTicket({ ...ticket, status: TicketStatus.EXPIRED });
-            return 'Expired ' + moment(ticket.expirationDate).fromNow();
-        }
-        return 'Expires ' + moment(ticket.expirationDate).fromNow();
-    }
 
     const onDeleteTicket = () => {
         deleteTicketFromDB(ticket.id).then(() => {
@@ -72,8 +62,17 @@ export default function TicketCard({
             updateTicket({ ...ticket, status: TicketStatus.VALID });
         });
     }
+    const getAdditionalText = () => {
+        if (ticket.status === TicketStatus.CONSUMED) {
+            return 'Consumed';
+        }
+        if (moment(ticket.expirationDate).isBefore(moment())) {
+            return 'Expired ' + moment(ticket.expirationDate).fromNow();
+        }
+        return 'Expires ' + moment(ticket.expirationDate).fromNow();
+    };
 
-
+ 
     return (
         <>
             {
@@ -126,7 +125,7 @@ export default function TicketCard({
             }
             {
                 skeleton && (
-                    <Skeleton className="h-64" />
+                    <Skeleton className="h-96" />
                 )
             }
         </>
