@@ -3,7 +3,7 @@ import { Ticket, TicketStatus } from "@/lib/types/ticket.type"
 import { Card } from "../ui/card"
 import { Button } from "../ui/button"
 import { Badge } from "../ui/badge"
-import { JSX, useEffect, useMemo } from "react"
+import { JSX, useMemo } from "react"
 import { CheckIcon, ClockIcon, EllipsisVertical, FileQuestion, XIcon } from "lucide-react"
 import useTicketStore from "@/lib/store/ticket.store"
 import {
