@@ -1,36 +1,81 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Cineticket
 
-## Getting Started
+## Description
 
-First, run the development server:
+Cineticket est un projet de gestion de tickets de cinéma développé principalement en TypeScript. Ce projet inclut des composants front-end en CSS et JavaScript.
 
-```bash
+## Installation
+
+Pour installer et configurer le projet localement, suivez ces étapes :
+
+1. **Clonez le dépôt :**
+
+   ```sh
+   git clone https://github.com/antoine13330/antoine-despres-cineticket.git
+   cd antoine-despres-cineticket
+   ```
+
+2. **Installez les dépendances :**
+
+   Assurez-vous d'avoir `npm` installé sur votre machine.
+
+   ```sh
+   npm install --force 
+   ```
+
+## Mode Développement
+
+Pour lancer le projet en mode développement, utilisez la commande suivante :
+
+```sh
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Cela démarrera un serveur de développement et vous pourrez accéder au projet via `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Déploiement
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Pour déployer le projet en production, suivez ces étapes :
 
-## Learn More
+1. **Construisez le projet :**
 
-To learn more about Next.js, take a look at the following resources:
+   ```sh
+   npm run build
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+   Cela génèrera un dossier `dist` contenant les fichiers de production.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+2. **Déployez les fichiers générés :**
 
-## Deploy on Vercel
+   Copiez le contenu du dossier `dist` sur votre serveur web.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Déploiement sur Vercel
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Ce projet est également déployé sur [Vercel](https://vercel.com/). Vous pouvez accéder à la version de production via l'URL suivante : [https://antoine-despres-cineticket.vercel.app](https://antoine-despres-cineticket.vercel.app).
+
+
+## Spécificités Importantes
+
+- **Langages Utilisés :**
+  - TypeScript (98.3%)
+  - CSS (1.4%)
+  - JavaScript (0.3%)
+
+- **Structure du Projet :**
+  - `src/` : Contient le code source principal du projet.
+  - `public/` : Contient les fichiers statiques.
+
+- **Scripts Utiles :**
+  - `npm run lint` : Lint le code pour détecter les erreurs de style et de syntaxe.
+  - `npm run test` : Exécute les tests unitaires. Non présent dans cette version.
+
+## Utilisation d'IndexedDB
+
+Ce projet utilise IndexedDB pour le stockage local des données. IndexedDB est une solution de stockage côté client qui offre plusieurs avantages :
+
+- **Stockage Hors-Ligne :** Permet aux utilisateurs d'accéder aux données même en l'absence de connexion Internet.
+- **Performance :** IndexedDB permet un accès rapide aux données locales, améliorant ainsi les performances de l'application.
+- **Capacité de Stockage :** IndexedDB offre une capacité de stockage plus importante comparée à d'autres solutions comme LocalStorage ou SessionStorage.
+
+IndexedDB est utilisé dans ce projet pour stocker temporairement les données des tickets, ce qui améliore l'expérience utilisateur en permettant une interaction fluide et rapide avec l'application.
+
