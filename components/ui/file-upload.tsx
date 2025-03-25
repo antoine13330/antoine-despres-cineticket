@@ -1,9 +1,8 @@
-import { cn } from "@/lib/utils";
 import React, { useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { IconUpload } from "@tabler/icons-react";
 import { useDropzone } from "react-dropzone";
-
+import { cn } from "@/lib/utils";
 const mainVariant = {
   initial: { x: 0, y: 0 },
   animate: { x: 20, y: -20, opacity: 0.9 },
@@ -13,27 +12,29 @@ const secondaryVariant = {
   initial: { opacity: 0 },
   animate: { opacity: 1 },
 };
-
 export const FileUpload = ({
   onChange,
   onUpload,
 }: {
   onChange?: (files: File[]) => void;
-  onUpload?: (base64File: string) => void;
+  onUpload?: (base64File: string, fileType: string) => void;
 }) => {
   const [files, setFiles] = useState<File[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = async (newFiles: File[]) => {
     setFiles((prevFiles) => [...prevFiles, ...newFiles]);
-    if ( onChange ) {
-      onChange(newFiles)
+    if (onChange) {
+      onChange(newFiles);
     }
 
-    // Conversion en base64
-    const base64Promises = newFiles.map((file) => fileToBase64(file));
+    const base64Promises = newFiles.map(async (file) => {
+      const base64 = await fileToBase64(file);
+      return { base64, type: file.type };
+    });
+
     const base64Files = await Promise.all(base64Promises);
-    if (onUpload) onUpload(base64Files[0]);
+    if (onUpload) base64Files.forEach(({ base64, type }) => onUpload(base64, type));
   };
 
   const handleClick = () => {
@@ -43,6 +44,7 @@ export const FileUpload = ({
   const { getRootProps, isDragActive } = useDropzone({
     multiple: false,
     noClick: true,
+    accept: { "image/*": [], "application/pdf": [] },
     onDrop: handleFileChange,
     onDropRejected: (error) => {
       console.log(error);

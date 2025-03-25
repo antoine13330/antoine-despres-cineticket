@@ -7,5 +7,6 @@ export type Ticket = {
     id : number,
     expirationDate : string,
     status : TicketStatus,
-    base64Image : string,    
+    base64Image : string,  
+    format : string  
 }

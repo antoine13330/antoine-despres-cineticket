@@ -7,7 +7,7 @@ import { useEffect, useRef, useState } from "react";
 
 type Props = {
     title ?: string;
-    onUpload: (base64Image: string) => void;
+    onUpload: (base64Image: string, format : string) => void;
 };
 
 export default function TakePictureBtn({ onUpload , title}: Props) {
@@ -35,7 +35,7 @@ export default function TakePictureBtn({ onUpload , title}: Props) {
 
         if (context) {
             context.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
-            onUpload(canvas.toDataURL());
+            onUpload(canvas.toDataURL(), "image/png");
         }
         stopCamera();
     };

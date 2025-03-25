@@ -18,18 +18,24 @@ type Actions = {
 
 // Fonction pour trier les tickets
 const sortAndUpdateTickets = (tickets: Ticket[]): Ticket[] => {
-    const sorted =  tickets
-        .filter(ticket => moment(ticket.expirationDate).isValid()) 
+    const sorted = tickets
+        .filter(ticket => moment(ticket.expirationDate).isValid())
         .sort((a, b) => moment(a.expirationDate).diff(moment(b.expirationDate)))
 
-        const updatedStatus = sorted.map(ticket => {
-            if (moment(ticket.expirationDate).isBefore(moment()) && ticket.status !== TicketStatus.EXPIRED) {
-                return { ...ticket, status: TicketStatus.EXPIRED }
-            }
-            return ticket
+    const updatedStatus = sorted.map(ticket => {
+        if (moment(ticket.expirationDate).isBefore(moment()) && ticket.status !== TicketStatus.EXPIRED) {
+            return { ...ticket, status: TicketStatus.EXPIRED }
         }
+        return ticket
+    }
     )
-    return updatedStatus
+    // return with ticket valid in first and expired in last
+    return updatedStatus.sort((a, b) => {
+        if (a.status === TicketStatus.VALID && b.status !== TicketStatus.VALID) return -1
+        if (a.status !== TicketStatus.VALID && b.status === TicketStatus.VALID) return 1
+        return 0
+
+    })
 }
 
 const useTicketStore = create(
