@@ -15,11 +15,12 @@ import { FileUpload } from "../ui/file-upload"
 import TakePictureBtn from "../ui/take-picture-btn"
 import { useState } from "react"
 import { TicketStatus } from "@/lib/types/ticket.type"
-import { Calendar } from "../ui/calendar"
 import useTicketStore from "@/lib/store/ticket.store"
 import { createTicketFromDB } from "@/lib/db/crud/ticket.crud"
 import Image from "next/image"
 import moment from "moment"
+import BarcodeGenerator from "../ui/barcode-generator"
+import { DatePicker } from "../ui/date-picker"
 
 enum TicketCreateStep {
     IMAGE,
@@ -28,15 +29,19 @@ enum TicketCreateStep {
 export default function TicketCreate() {
     const { addTicket } = useTicketStore();
     const [imageBase64, setImageBase64] = useState<string | null>(null);
+    const [imageFormat, setImageFormat] = useState<string | null>(null);
     const [step, setStep] = useState<TicketCreateStep>(TicketCreateStep.IMAGE);
     const [expirationDate, setExpirationDate] = useState<Date>(moment().add(1, 'week').toDate());
     const [dialogOpen, setDialogOpen] = useState(false);
-    const onUpload = (base64Image: string) => {
+    const onUpload = (base64Image: string, format : string) => {
         setImageBase64(base64Image);
+        setImageFormat(format);
     }
 
     const onChangePicture = () => {
         setImageBase64(null);
+        setStep(TicketCreateStep.IMAGE)
+        setImageFormat(null);
     }
 
 
@@ -44,7 +49,8 @@ export default function TicketCreate() {
         const ticket = {
             base64Image: imageBase64 as string,
             expirationDate: expirationDate.toISOString(),
-            status: TicketStatus.VALID
+            status: TicketStatus.VALID,
+            format : imageFormat
         }
         createTicketFromDB(ticket).then((ticket) => {
             setStep(TicketCreateStep.IMAGE);
@@ -54,6 +60,13 @@ export default function TicketCreate() {
         setDialogOpen(false);
     }
 
+
+    const onResetDatas = () => {
+        setStep(TicketCreateStep.IMAGE);
+        setImageBase64(null);
+        setImageFormat(null);
+        setExpirationDate(moment().add(1, 'week').toDate());
+    }
     const getCurrentStepContent = () => {
         switch (step) {
             case TicketCreateStep.IMAGE:
@@ -66,6 +79,8 @@ export default function TicketCreate() {
                                         <FileUpload onUpload={onUpload} />
                                         <span className="block text-center text-neutral-400 dark:text-neutral-500 my-2">or</span>
                                         <TakePictureBtn onUpload={onUpload} title="Place the Bar/QR code in the frame" />
+                                        <span className="block text-center text-neutral-400 dark:text-neutral-500 my-2">or</span>
+                                        <BarcodeGenerator onUpload={onUpload} />
                                     </>
 
                                 )
@@ -88,7 +103,7 @@ export default function TicketCreate() {
                     footer: (
                         <>
                             <DrawerClose asChild>
-                                <Button variant="outline" className="w-full">Cancel</Button>
+                                <Button variant="outline" className="w-full" onClick={onResetDatas}>Cancel</Button>
                             </DrawerClose>
                             <Button
                                 onClick={() => setStep(TicketCreateStep.INFOS)}
@@ -101,9 +116,9 @@ export default function TicketCreate() {
             case TicketCreateStep.INFOS:
                 return {
                     content: (
-                        <div className="flex  flex-col w-full items-center border border-muted rounded-lg pb-2  pt-4">
-                            <span className="font-semibold text-sm ">Expiration date</span>
-                            <Calendar  selected={expirationDate} onSelect={setExpirationDate} mode="single" />
+                        <div className="flex flex-col  w-full  pb-2  pt-4 gap-2">
+                            <span className=" text-sm ">Expiration date : </span>
+                            <DatePicker value={expirationDate} onChange={setExpirationDate} />
                         </div>
 
                     ),

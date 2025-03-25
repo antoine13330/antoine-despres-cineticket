@@ -44,7 +44,7 @@ export default function TicketCard({
             default:
                 return { color: 'bg-gray-400', icon: <FileQuestion size={iconSize} /> }
         }
-    }, [ticket?.status])
+    }, [ ticket])
 
     const onDeleteTicket = () => {
         deleteTicketFromDB(ticket.id).then(() => {
@@ -72,6 +72,14 @@ export default function TicketCard({
         return 'Expires ' + moment(ticket.expirationDate).fromNow();
     };
 
+    const onExportTicket = () => {
+        const a = document.createElement('a');
+        a.href = ticket.base64Image;
+        const format = ticket.format.replace('image/', '').replace('application/', '').replace('image_', '').replace('application_', '');
+        a.download = `ticket-${ticket.id}.${format}`;
+        a.click();
+    }
+
  
     return (
         <>
@@ -98,6 +106,9 @@ export default function TicketCard({
                                     <DropdownMenuItem
                                         onClick={onDeleteTicket}
                                     >Delete</DropdownMenuItem>
+                                    <DropdownMenuItem
+                                        onClick={onExportTicket}
+                                    >Download</DropdownMenuItem>
                                 </DropdownMenuContent>
                             </DropdownMenu>
                         </div>

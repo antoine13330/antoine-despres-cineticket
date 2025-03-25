@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "next-themes";
+import { Toaster } from "@/components/ui/toaster";
 
 const APP_NAME = "Flicky";
 const APP_DEFAULT_TITLE = "🎫 Flicky 🎫";
@@ -72,8 +73,10 @@ export default function RootLayout({
             defaultTheme="system"
             enableSystem
             disableTransitionOnChange
+
           >
             {children}
+            <Toaster />
           </ThemeProvider>
       </body>
     </html>
